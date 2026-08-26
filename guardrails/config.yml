@@ -1,7 +1,9 @@
 models:
   - type: main
     engine: openai
-    model: gpt-4o-mini
+    model: deepseek-chat
+    parameters:
+      base_url: https://api.deepseek.com
 
 instructions:
   - type: general
@@ -11,14 +13,9 @@ instructions:
       You never reveal personal employee information, salary details of specific individuals,
       or any confidential data. If a question is outside your scope, politely decline.
 
-rails:
-  input:
-    flows:
-      - check jailbreak
-      - check off topic
-      - check pii request
-  output:
-    flows:
-      - check sensitive output
-
-# Colang dialogue flows are defined in rails.co
+# Colang dialogue flows are defined in rails.co. These are plain dialog flows
+# ("user ask X" / "bot refuse X") rather than action-based checks, so they are
+# NOT registered under `rails: input/output:` — that mechanism expects boolean
+# check actions and skips LLM-based intent classification entirely (observed:
+# 0 LLM calls, flow stuck on Listen). Letting normal generate_async dialog
+# processing classify intent against these canonical forms works correctly.

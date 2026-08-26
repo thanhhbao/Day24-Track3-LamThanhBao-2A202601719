@@ -75,20 +75,20 @@ def build_pipeline():
 
 
 def run_query(q: str, search, reranker, top_k: int) -> tuple[str, list[str]]:
-    from config import OPENAI_API_KEY
+    from config import LLM_API_KEY, LLM_BASE_URL, LLM_MODEL
 
     results = search.search(q)
     docs    = [{"text": r.text, "score": r.score, "metadata": r.metadata} for r in results]
     reranked = reranker.rerank(q, docs, top_k=top_k)
     contexts = [r.text for r in reranked] if reranked else [r.text for r in results[:3]]
 
-    if OPENAI_API_KEY and contexts:
+    if LLM_API_KEY and contexts:
         try:
             from openai import OpenAI
-            client = OpenAI()
+            client = OpenAI(api_key=LLM_API_KEY, base_url=LLM_BASE_URL)
             ctx = "\n\n".join(contexts)
             resp = client.chat.completions.create(
-                model="gpt-4o-mini",
+                model=LLM_MODEL,
                 messages=[
                     {"role": "system", "content": "Trả lời CHỈ dựa trên context. Nếu không có → nói 'Không tìm thấy.'"},
                     {"role": "user",   "content": f"Context:\n{ctx}\n\nCâu hỏi: {q}"},
