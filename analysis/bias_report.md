@@ -1,6 +1,6 @@
 # LLM Judge Bias Report — Phase B
 
-**Sinh viên:** Lam Thanh Bao
+**Sinh viên:** Lâm Thành Bảo - 2A202601719
 **Ngày:** 2026-08-26
 **Judge model:** `deepseek-chat` (DeepSeek, OpenAI-compatible — đổi từ gpt-4o-mini do giới hạn credit/rate limit của OpenRouter, xem `reports/blueprint.md`)
 
@@ -10,35 +10,35 @@ Phương pháp: mỗi câu trong `human_labels_10q.json` được judge dưới 
 
 ## 1. Pairwise Judge Results
 
-| # | Question (tóm tắt) | Winner | Reasoning tóm tắt |
-|---|---|---|---|
-| 1 | Nghỉ khi kết hôn? | B | Ground truth đầy đủ hơn (nêu rõ không trừ phép năm) |
-| 5 | Mua thiết bị 55tr cần ai duyệt? | B | Ground truth có ngưỡng chính xác + người duyệt (CEO) |
-| 12 | Thưởng Tết tối thiểu? | B | Ground truth có điều kiện 6 tháng + pro-rata |
-| 21 | Senior 9 năm: phép + lương? | B | Ground truth có công thức tính rõ ràng |
-| 23 | Hoàn trả phí đào tạo nghỉ sau 8 tháng? | B | Ground truth nêu rõ cam kết 1 năm + mức hoàn trả 100% |
-| 29 | Tạm ứng 8tr quá hạn: ai duyệt, phạt bao nhiêu? | B | Ground truth chi tiết hơn về ngưỡng duyệt và cách tính phạt |
-| 33 | Manager 12 năm: phụ cấp + phép? | tie | Cả hai đều đủ chi tiết, khác biệt nhỏ |
-| 41 | Nghỉ phép năm bao nhiêu ngày? | B | model_answer dùng policy v2023 cũ, ground_truth đúng v2024 |
-| 46 | Thử việc có phép năm không? | tie | Cả hai đều đúng và đủ, model_answer súc tích hơn |
-| 50 | VPN cá nhân khi WFH? | B | model_answer bỏ sót việc VPN cá nhân bị cấm theo policy |
+| #   | Question (tóm tắt)                             | Winner | Reasoning tóm tắt                                           |
+| --- | ---------------------------------------------- | ------ | ----------------------------------------------------------- |
+| 1   | Nghỉ khi kết hôn?                              | B      | Ground truth đầy đủ hơn (nêu rõ không trừ phép năm)         |
+| 5   | Mua thiết bị 55tr cần ai duyệt?                | B      | Ground truth có ngưỡng chính xác + người duyệt (CEO)        |
+| 12  | Thưởng Tết tối thiểu?                          | B      | Ground truth có điều kiện 6 tháng + pro-rata                |
+| 21  | Senior 9 năm: phép + lương?                    | B      | Ground truth có công thức tính rõ ràng                      |
+| 23  | Hoàn trả phí đào tạo nghỉ sau 8 tháng?         | B      | Ground truth nêu rõ cam kết 1 năm + mức hoàn trả 100%       |
+| 29  | Tạm ứng 8tr quá hạn: ai duyệt, phạt bao nhiêu? | B      | Ground truth chi tiết hơn về ngưỡng duyệt và cách tính phạt |
+| 33  | Manager 12 năm: phụ cấp + phép?                | tie    | Cả hai đều đủ chi tiết, khác biệt nhỏ                       |
+| 41  | Nghỉ phép năm bao nhiêu ngày?                  | B      | model_answer dùng policy v2023 cũ, ground_truth đúng v2024  |
+| 46  | Thử việc có phép năm không?                    | tie    | Cả hai đều đúng và đủ, model_answer súc tích hơn            |
+| 50  | VPN cá nhân khi WFH?                           | B      | model_answer bỏ sót việc VPN cá nhân bị cấm theo policy     |
 
 ---
 
 ## 2. Swap-and-Average Results
 
-| # | Pass 1 Winner | Pass 2 Winner | Final | Position Consistent? |
-|---|---|---|---|---|
-| 1 | B | B | B | ✓ |
-| 5 | B | B | B | ✓ |
-| 12 | B | B | B | ✓ |
-| 21 | B | B | B | ✓ |
-| 23 | B | B | B | ✓ |
-| 29 | B | B | B | ✓ |
-| 33 | B | A | tie | ✗ |
-| 41 | B | B | B | ✓ |
-| 46 | tie | A | tie | ✗ |
-| 50 | B | B | B | ✓ |
+| #   | Pass 1 Winner | Pass 2 Winner | Final | Position Consistent? |
+| --- | ------------- | ------------- | ----- | -------------------- |
+| 1   | B             | B             | B     | ✓                    |
+| 5   | B             | B             | B     | ✓                    |
+| 12  | B             | B             | B     | ✓                    |
+| 21  | B             | B             | B     | ✓                    |
+| 23  | B             | B             | B     | ✓                    |
+| 29  | B             | B             | B     | ✓                    |
+| 33  | B             | A             | tie   | ✗                    |
+| 41  | B             | B             | B     | ✓                    |
+| 46  | tie           | A             | tie   | ✗                    |
+| 50  | B             | B             | B     | ✓                    |
 
 **Position bias rate (từ `reports/judge_results.json`):** 30% (3/10 case không nhất quán giữa 2 lượt — swap thay đổi kết quả đối với các câu có 2 đáp án gần tương đương chất lượng).
 
@@ -50,17 +50,17 @@ Phương pháp: mỗi câu trong `human_labels_10q.json` được judge dưới 
 **Judge labels:** từ `swap_and_average()` so model_answer với ground_truth (0 = model_answer sai, 1 = model_answer đúng/tie)
 
 | Question ID | Human Label | Judge Label | Agree? |
-|---|---|---|---|
-| 1 | 1 | 0 | ✗ |
-| 5 | 0 | 0 | ✓ |
-| 12 | 1 | 0 | ✗ |
-| 21 | 1 | 1 | ✓ |
-| 23 | 1 | 0 | ✗ |
-| 29 | 0 | 0 | ✓ |
-| 33 | 1 | 1 | ✓ |
-| 41 | 0 | 0 | ✓ |
-| 46 | 1 | 1 | ✓ |
-| 50 | 0 | 0 | ✓ |
+| ----------- | ----------- | ----------- | ------ |
+| 1           | 1           | 0           | ✗      |
+| 5           | 0           | 0           | ✓      |
+| 12          | 1           | 0           | ✗      |
+| 21          | 1           | 1           | ✓      |
+| 23          | 1           | 0           | ✗      |
+| 29          | 0           | 0           | ✓      |
+| 33          | 1           | 1           | ✓      |
+| 41          | 0           | 0           | ✓      |
+| 46          | 1           | 1           | ✓      |
+| 50          | 0           | 0           | ✓      |
 
 **Cohen's κ:** 0.444
 **Interpretation:** moderate (0.4–0.6 theo thang Landis-Koch) — chưa đạt ngưỡng bonus (>0.6 substantial).
@@ -72,6 +72,7 @@ Phương pháp: mỗi câu trong `human_labels_10q.json` được judge dưới 
 ## 4. Verbosity Bias
 
 Trong các case có winner rõ ràng (không phải tie, 7/10 case):
+
 - A (model_answer) thắng + A dài hơn B: 0/7 cases
 - B (ground_truth) thắng + B dài hơn A: 7/7 cases
 - **Verbosity bias rate:** 100%
